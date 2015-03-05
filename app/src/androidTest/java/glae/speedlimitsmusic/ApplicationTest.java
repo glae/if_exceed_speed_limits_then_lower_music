@@ -1,4 +1,4 @@
-package speedlimitsmusic.glae.speedlimitsmusic;
+package glae.speedlimitsmusic;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
