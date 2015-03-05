@@ -8,6 +8,7 @@ import android.location.LocationManager;
 import android.location.LocationProvider;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,10 +37,12 @@ import static android.location.LocationManager.GPS_PROVIDER;
 
 public class PlaceholderFragment extends Fragment {
 
+    public static final String NOKIA_HERE_BASE_URL_API = "http://route.st.nlp.nokia.com/routing/6.2/getlinkinfo.json?app_id=DemoAppId01082013GAL&app_code=AJKnXv84fjrb0KIHawS0Tg&waypoint=";
     private static final String TAG = "[speedlimitsmusic]";
     private MainActivity mainActivity;
     private Context applicationContext;
     private View rootView;
+
 
     public PlaceholderFragment() {
     }
@@ -48,6 +51,8 @@ public class PlaceholderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
         return rootView;
     }
 
@@ -61,28 +66,33 @@ public class PlaceholderFragment extends Fragment {
         final TextView volumeText = (TextView) rootView.findViewById(R.id.volume);
         final TextView detailText = (TextView) rootView.findViewById(R.id.detailView);
 
-
+        final AudioManager audioManager = (AudioManager) applicationContext.getSystemService(AUDIO_SERVICE);
         final LocationManager locationManager = (LocationManager) applicationContext.getSystemService(LOCATION_SERVICE);
         LocationProvider provider = locationManager.getProvider(GPS_PROVIDER);
 
         if (provider.supportsSpeed()) {
-            refreshDataEverySeconds(speedText, volumeText, limitText, detailText, locationManager);
+            refreshDataEverySeconds(speedText, volumeText, limitText, detailText, locationManager, audioManager);
         } else {
             warnAboutGPSspeedFunction();
         }
     }
 
-    private void refreshDataEverySeconds(final TextView speedText, final TextView volumeText, final TextView limitText, TextView detailText, final LocationManager locationManager) {
+    private void refreshDataEverySeconds(final TextView speedText, final TextView volumeText, final TextView limitText, final TextView detailText, final LocationManager locationManager, final AudioManager audioManager) {
         Thread t = new Thread() {
 
             HttpClient client = new DefaultHttpClient();
 
             @Override
             public void run() {
+
                 try {
                     while (!isInterrupted()) {
-                        TimeUnit.SECONDS.sleep(1);
+                        TimeUnit.SECONDS.sleep(2);
                         mainActivity.runOnUiThread(new Runnable() {
+
+                            private double limitInKmH=0;
+                            private double speedInKmH=0;
+
                             @Override
                             public void run() {
                                 refreshMusicVolume();
@@ -96,30 +106,47 @@ public class PlaceholderFragment extends Fragment {
                                 }
                             }
 
-
                             private void refeshSpeedLimit(Location lastKnownLocation) {
 
                                 lastKnownLocation.getLatitude();
-                                String baseUrl = "http://route.st.nlp.nokia.com/routing/6.2/getlinkinfo.json?app_id=DemoAppId01082013GAL&app_code=AJKnXv84fjrb0KIHawS0Tg&waypoint=";
+                                String baseUrl = NOKIA_HERE_BASE_URL_API;
                                 baseUrl += lastKnownLocation.getLatitude() + "," + lastKnownLocation.getLongitude();
 
                                 String nokiaHereJson = getNokiaHere(baseUrl);
 
+                                System.out.println(nokiaHereJson);
+
                                 try {
-                                    JSONObject json = new JSONObject(nokiaHereJson);
-
-                                    JSONObject jsonObject = json.getJSONObject("Response").getJSONObject("Link");
-                                    long speedLimit = jsonObject.getLong("SpeedLimit");
-
-                                    double limitInKmH = speedLimit * 3.6;
-                                    limitText.setText(Double.valueOf(limitInKmH).intValue() + "");
-                                    Log.d(TAG, "limit=" + limitText);
+                                    setSpeedLimitLabel(nokiaHereJson);
 
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                                //TODO detail
+                            }
 
+                            private void setSpeedLimitLabel(String nokiaHereJson) throws JSONException {
+                                JSONObject json = new JSONObject(nokiaHereJson);
+
+                                JSONObject response = json.getJSONObject("Response");
+                                if (response != null) {
+                                    JSONObject jsonLink = response.getJSONArray("Link").getJSONObject(0);
+                                    if (jsonLink != null) {
+                                        JSONObject dynamicSpeedInfo = jsonLink.getJSONObject("DynamicSpeedInfo");
+
+                                        if (dynamicSpeedInfo != null) {
+                                            double speedLimit = dynamicSpeedInfo.getDouble("BaseSpeed");
+                                            limitInKmH = speedLimit * 3.6;
+                                            limitText.setText(Double.valueOf(limitInKmH).intValue() + "");
+                                            Log.d(TAG, "limit=" + limitText);
+
+                                            JSONObject address = jsonLink.getJSONObject("Address");
+                                            if (address != null) {
+
+                                                detailText.setText(address.toString());
+                                            }
+                                        }
+                                    }
+                                }
                             }
 
 
@@ -150,21 +177,17 @@ public class PlaceholderFragment extends Fragment {
 
 
                             private void refreshSpeed(Location lastKnownLocation) {
-                                double speedInKmH = lastKnownLocation.getSpeed() * 3.6;
+                                speedInKmH = lastKnownLocation.getSpeed() * 3.6;
                                 speedText.setText(Double.valueOf(speedInKmH).intValue() + "");
                                 Log.d(TAG, "speedText=" + speedText);
 
                             }
 
                             private void refreshMusicVolume() {
-
-                                AudioManager am = (AudioManager) applicationContext.getSystemService(AUDIO_SERVICE);
-                                int systemVolume = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+                                int systemVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                                 volumeText.setText(String.valueOf(systemVolume));
                                 Log.d(TAG, "volume=" + systemVolume);
                             }
-
-
                         });
                     }
                 } catch (InterruptedException e) {
