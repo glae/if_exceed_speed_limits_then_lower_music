@@ -4,13 +4,13 @@
 
 Application, site or plugin aiming to encourage a driver to respect speed limits, by reducing music volume when exceeding speed limit.
 
-## Existing applications 
+## Existing stuff 
 
 - [Mappy GPS free](https://play.google.com/store/apps/details?id=com.mappy.androidpagesjaunes&hl=fr_FR) (beep alarm when over speed limit)
 - http://www.apivir.org/index.html
 - related, HUD in car: https://www.youtube.com/watch?v=rzda7CQ-ZAU 
 
-## usable APIs
+## Usable APIs
 
 Here are the three needed data to consider an implementation:
 
