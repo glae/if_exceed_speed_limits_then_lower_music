@@ -1,42 +1,36 @@
-# Dépasse la vitesse = baisse la musique
+# Excess speed limits = lower music volume
 
-## Objectif 
+## Goal
 
-Application, site ou plugin dont le but est d'encourager le conducteur à respecter les limitations de vitesse, en réduisant le volume musical dès que la limitation de vitesse (ou au seuil au-delà) en cours est dépassée. 
+Application, site or plugin aiming to encourage a driver to respect speed limits, by reducing music volume when exceeding speed limit.
 
-## Applications utilisables telles quelles 
+## Existing applications 
 
-Rien trouvé, ce qui s'en rapproche le plus est [Mappy GPS free](https://play.google.com/store/apps/details?id=com.mappy.androidpagesjaunes&hl=fr_FR) (alerte sonore)
+- [Mappy GPS free](https://play.google.com/store/apps/details?id=com.mappy.androidpagesjaunes&hl=fr_FR) (beep alarm when over speed limit)
+- http://www.apivir.org/index.html
+- related, HUD in car: https://www.youtube.com/watch?v=rzda7CQ-ZAU 
 
-Soutenir http://www.apivir.org/index.html
+## usable APIs
 
-Un peu à côté, un HUD sur la vitre : https://www.youtube.com/watch?v=rzda7CQ-ZAU 
+Here are the three needed data to consider an implementation:
 
-## API exploitables
+### 1. Vehicle speed
 
-Voici les trois données nécessaires pour envisager une réalisation : 
+- there is a API norm: http://www.w3.org/2014/automotive/vehicle_spec.html
 
-### 1. Vitesse véhicule
+- http://developer.android.com/guide/topics/location/strategies.html and http://developer.android.com/reference/android/location/Location.html#getSpeed() or http://www.devlper.com/2010/07/getting-speed-of-the-device-using-gps-in-android/
 
-- il existe une norme d'API http://www.w3.org/2014/automotive/vehicle_spec.html
+### 2. Speed limits
 
-- http://developer.android.com/guide/topics/location/strategies.html et http://developer.android.com/reference/android/location/Location.html#getSpeed() ou encore http://www.devlper.com/2010/07/getting-speed-of-the-device-using-gps-in-android/
+- Openstreetmap : http://www.itoworld.com/map/124 (light API: http://wiki.openstreetmap.org/wiki/Overpass_API et http://wiki.openstreetmap.org/wiki/Key%3amaxspeed) or https://www.data.gouv.fr/fr/datasets/kilometrage-des-types-de-routes-repartis-par-communes/
 
-### 2. Limites de vitesse
+- [**chosen for test**] HERE (Nokia/ex Navteq) : https://developer.here.com/rest-apis/documentation/routing/topics/resource-get-link-info.html (http://stackoverflow.com/questions/22821101/here-maps-rest-api-getlinkinfo-returns-incorrect-speed-limit) http://heremaps.github.io/examples/explorer.html#speed-limit-on-click__index   
 
-- Openstreetmap : http://www.itoworld.com/map/124 (API légère à consommer : http://wiki.openstreetmap.org/wiki/Overpass_API et http://wiki.openstreetmap.org/wiki/Key%3amaxspeed) ou encore https://www.data.gouv.fr/fr/datasets/kilometrage-des-types-de-routes-repartis-par-communes/
-
-- [**choix pour test**] HERE (ex Navteq) : https://developer.here.com/rest-apis/documentation/routing/topics/resource-get-link-info.html (http://stackoverflow.com/questions/22821101/here-maps-rest-api-getlinkinfo-returns-incorrect-speed-limit) http://heremaps.github.io/examples/explorer.html#speed-limit-on-click__index Le problème est que toutes les données ne semblent pas disponibles (le "/", à voir) http://route.st.nlp.nokia.com/routing/6.2/getlinkinfo.json?app_id=DemoAppId01082013GAL&app_code=AJKnXv84fjrb0KIHawS0Tg&waypoint=47.40313352435497,0.8754457378382199
+API call example: http://route.st.nlp.nokia.com/routing/6.2/getlinkinfo.json?app_id=DemoAppId01082013GAL&app_code=AJKnXv84fjrb0KIHawS0Tg&waypoint=47.40313352435497,0.8754457378382199
  
-D'après les https://developer.here.com/terms-conditions nous avons droit à une requête par seconde gratuite.
-
-https://developer.android.com/training/basics/firstapp/index.html
+https://developer.here.com/terms-conditions says we have 1 free request per second.
 
 - Wikispeedia
 
-### 3. Accès à la gestion du volume
+### 3. Volume control
 - [AudioManager](http://developer.android.com/reference/android/media/AudioManager.html)
-
-## Solutions techniques
-
-TODO
