@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.location.Location;
 import android.location.LocationManager;
-import android.location.LocationProvider;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -22,6 +21,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,15 +34,16 @@ import java.util.concurrent.TimeUnit;
 import static android.content.Context.AUDIO_SERVICE;
 import static android.content.Context.LOCATION_SERVICE;
 import static android.location.LocationManager.GPS_PROVIDER;
+import static android.media.AudioManager.STREAM_MUSIC;
 
 public class PlaceholderFragment extends Fragment {
 
     public static final String NOKIA_HERE_BASE_URL_API = "http://route.st.nlp.nokia.com/routing/6.2/getlinkinfo.json?app_id=DemoAppId01082013GAL&app_code=AJKnXv84fjrb0KIHawS0Tg&waypoint=";
-    private static final String TAG = "[speedlimitsmusic]";
+    public static final String TAG = "[speedlimitsmusic]";
+
     private MainActivity mainActivity;
     private Context applicationContext;
     private View rootView;
-
 
     public PlaceholderFragment() {
     }
@@ -68,9 +69,8 @@ public class PlaceholderFragment extends Fragment {
 
         final AudioManager audioManager = (AudioManager) applicationContext.getSystemService(AUDIO_SERVICE);
         final LocationManager locationManager = (LocationManager) applicationContext.getSystemService(LOCATION_SERVICE);
-        LocationProvider provider = locationManager.getProvider(GPS_PROVIDER);
 
-        if (provider.supportsSpeed()) {
+        if (locationManager.getProvider(GPS_PROVIDER).supportsSpeed()) {
             refreshDataEverySeconds(speedText, volumeText, limitText, detailText, locationManager, audioManager);
         } else {
             warnAboutGPSspeedFunction();
@@ -81,27 +81,33 @@ public class PlaceholderFragment extends Fragment {
         Thread t = new Thread() {
 
             HttpClient client = new DefaultHttpClient();
+            SpeedLimitsLocationListener locationListener = new SpeedLimitsLocationListener();
 
             @Override
             public void run() {
-
                 try {
                     while (!isInterrupted()) {
                         TimeUnit.SECONDS.sleep(2);
+
                         mainActivity.runOnUiThread(new Runnable() {
 
-                            private double limitInKmH=0;
-                            private double speedInKmH=0;
+                            private int limitInKmH = 0;
+                            private int speedInKmH = 0;
+                            private int currentVolume = 0;
 
                             @Override
                             public void run() {
-                                refreshMusicVolume();
 
+                                locationManager.requestLocationUpdates(GPS_PROVIDER, 1000, 0, locationListener);
                                 Location lastKnownLocation = locationManager.getLastKnownLocation(GPS_PROVIDER);
+
                                 if (lastKnownLocation != null) {
                                     refreshSpeed(lastKnownLocation);
                                     refeshSpeedLimit(lastKnownLocation);
+                                    refreshMusicVolume();
                                 } else {
+                                    speedText.setText("-");
+                                    limitText.setText("-");
                                     Log.d(TAG, "lastKnowLocation is null");
                                 }
                             }
@@ -114,11 +120,8 @@ public class PlaceholderFragment extends Fragment {
 
                                 String nokiaHereJson = getNokiaHere(baseUrl);
 
-                                System.out.println(nokiaHereJson);
-
                                 try {
                                     setSpeedLimitLabel(nokiaHereJson);
-
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -129,26 +132,26 @@ public class PlaceholderFragment extends Fragment {
 
                                 JSONObject response = json.getJSONObject("Response");
                                 if (response != null) {
-                                    JSONObject jsonLink = response.getJSONArray("Link").getJSONObject(0);
-                                    if (jsonLink != null) {
-                                        JSONObject dynamicSpeedInfo = jsonLink.getJSONObject("DynamicSpeedInfo");
+                                    JSONArray link = response.getJSONArray("Link");
+                                    if (link != null) {
+                                        JSONObject jsonLink = link.getJSONObject(0);
+                                        if (jsonLink != null) {
+                                            JSONObject dynamicSpeedInfo = jsonLink.getJSONObject("DynamicSpeedInfo");
+                                            if (dynamicSpeedInfo != null) {
+                                                double speedLimit = dynamicSpeedInfo.getDouble("BaseSpeed");
+                                                limitInKmH = Double.valueOf(speedLimit * 3.6).intValue();
+                                                limitText.setText(limitInKmH + "");
+                                                Log.d(TAG, "limit=" + limitText);
 
-                                        if (dynamicSpeedInfo != null) {
-                                            double speedLimit = dynamicSpeedInfo.getDouble("BaseSpeed");
-                                            limitInKmH = speedLimit * 3.6;
-                                            limitText.setText(Double.valueOf(limitInKmH).intValue() + "");
-                                            Log.d(TAG, "limit=" + limitText);
-
-                                            JSONObject address = jsonLink.getJSONObject("Address");
-                                            if (address != null) {
-
-                                                detailText.setText(address.toString());
+                                                JSONObject address = jsonLink.getJSONObject("Address");
+                                                if (address != null) {
+                                                    detailText.setText(address.toString());
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
-
 
                             private String getNokiaHere(String url) {
                                 StringBuilder builder = new StringBuilder();
@@ -177,16 +180,19 @@ public class PlaceholderFragment extends Fragment {
 
 
                             private void refreshSpeed(Location lastKnownLocation) {
-                                speedInKmH = lastKnownLocation.getSpeed() * 3.6;
-                                speedText.setText(Double.valueOf(speedInKmH).intValue() + "");
+                                speedInKmH = Double.valueOf(lastKnownLocation.getSpeed() * 3.6).intValue();
+                                speedText.setText(speedInKmH + "");
                                 Log.d(TAG, "speedText=" + speedText);
-
                             }
 
                             private void refreshMusicVolume() {
-                                int systemVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-                                volumeText.setText(String.valueOf(systemVolume));
-                                Log.d(TAG, "volume=" + systemVolume);
+                                currentVolume = audioManager.getStreamVolume(STREAM_MUSIC);
+
+                                //TODO update policy
+                                //audioManager.setStreamVolume(STREAM_MUSIC, 8, 0);
+
+                                volumeText.setText(String.valueOf(currentVolume));
+                                Log.d(TAG, "volume=" + currentVolume);
                             }
                         });
                     }

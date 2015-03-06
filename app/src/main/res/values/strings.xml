@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Speed Limits Music</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="warning">Warning: this application requires actived GPS and data (internet) support.</string>
+    <string name="warning">Warning: this application requires activated GPS and data (internet) support.</string>
 </resources>
