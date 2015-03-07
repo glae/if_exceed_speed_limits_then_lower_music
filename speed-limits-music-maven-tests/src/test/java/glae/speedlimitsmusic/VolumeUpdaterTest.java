@@ -11,7 +11,7 @@ public class VolumeUpdaterTest {
     VolumeUpdater updater = new VolumeUpdater();
 
     @Test
-    public void quand_je_roule_entre_0_et_70kmh_je_veux_que_le_son_soit_de_7() {
+    public void when_I_drive_between_0_and_70_kmph_I_want_the_volume_to_be_7() {
         int currentSpeed = 0;
         int nextVolume = updater.evaluateNextVolume(currentSpeed, ANY_LIMIT);
         assertThat(nextVolume).isEqualTo(7);
@@ -22,7 +22,7 @@ public class VolumeUpdaterTest {
     }
 
     @Test
-    public void quand_je_roule_entre_71_et_90kmh_je_veux_que_le_son_soit_de_8() {
+    public void when_I_drive_between_71_and_90_kmph_I_want_the_volume_to_be_8() {
         int currentSpeed = 71;
         int nextVolume = updater.evaluateNextVolume(currentSpeed, ANY_LIMIT);
         assertThat(nextVolume).isEqualTo(8);
@@ -33,7 +33,7 @@ public class VolumeUpdaterTest {
     }
 
     @Test
-    public void quand_je_roule_entre_91_et_110kmh_je_veux_que_le_son_soit_de_9() {
+    public void when_I_drive_between_91_and_110_kmph_I_want_the_volume_to_be_9() {
         int currentSpeed = 91;
         int nextVolume = updater.evaluateNextVolume(currentSpeed, ANY_LIMIT);
         assertThat(nextVolume).isEqualTo(9);
@@ -44,7 +44,7 @@ public class VolumeUpdaterTest {
     }
 
     @Test
-    public void quand_je_roule_entre_111_et_plus_je_veux_que_le_son_soit_de_10() {
+    public void when_I_drive_between_111_and_plus_I_want_the_volume_to_be_10() {
         int currentSpeed = 111;
         int nextVolume = updater.evaluateNextVolume(currentSpeed, ANY_LIMIT);
         assertThat(nextVolume).isEqualTo(10);
@@ -52,7 +52,7 @@ public class VolumeUpdaterTest {
 
 
     @Test
-    public void quand_je_roule_5_km_h_au_delà_de_la_limite_baisser_le_volume_de_1_cran() {
+    public void when_I_drive_5_kmph_over_the_limit_then_decrease_volume_by_1_unit() {
 
         int currentSpeed = 55;
         int currentLimit = 50;
@@ -62,7 +62,7 @@ public class VolumeUpdaterTest {
     }
 
     @Test
-    public void quand_je_roule_5_km_h_au_delà_de_la_limite_baisser_le_volume_de_2_crans() {
+    public void when_I_drive_5_kmph_over_the_limit_then_decrease_volume_by_2_units() {
 
         int currentSpeed = 60;
         int currentLimit = 50;
@@ -72,7 +72,7 @@ public class VolumeUpdaterTest {
     }
 
     @Test
-    public void quand_je_roule_15_km_h_au_delà_de_la_limite_baisser_le_volume_de_3_crans() {
+    public void when_I_drive_15_kmph_over_the_limit_then_decrease_volume_by_3_units() {
 
         int currentSpeed = 65;
         int currentLimit = 50;
@@ -83,7 +83,7 @@ public class VolumeUpdaterTest {
 
 
     @Test
-    public void quand_je_roule_à_101_au_lieu_de_90() {
+    public void when_I_drive_at_101_instead_of_90_kmph() {
 
         int currentSpeed = 101;
         int currentLimit = 90;

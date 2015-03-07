@@ -7,7 +7,12 @@ public class VolumeUpdater {
         int nextVolume = 0;
 
         nextVolume = decreaseVolumeWhenExcessLimit(currentSpeed, currentLimit, nextVolume);
+        nextVolume = adjustVolumeAccordingToVehicleSpeed(currentSpeed, nextVolume);
 
+        return nextVolume;
+    }
+
+    private int adjustVolumeAccordingToVehicleSpeed(int currentSpeed, int nextVolume) {
         if (currentSpeed <= 70) {
             nextVolume += 7;
         } else if (currentSpeed <= 90) {
@@ -17,7 +22,6 @@ public class VolumeUpdater {
         } else {
             nextVolume += 10;
         }
-
         return nextVolume;
     }
 
