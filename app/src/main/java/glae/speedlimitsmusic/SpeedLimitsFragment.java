@@ -83,7 +83,7 @@ public class SpeedLimitsFragment extends Fragment {
             HttpClient client = new DefaultHttpClient();
             SpeedLimitsLocationListener locationListener = new SpeedLimitsLocationListener();
             VolumeUpdater updater = new VolumeUpdater();
-            Runnable updateLabels = updateLabels();
+            Runnable updateLabels = createUpdateLabelsAction();
 
             @Override
             public void run() {
@@ -98,7 +98,7 @@ public class SpeedLimitsFragment extends Fragment {
                 }
             }
 
-            private Runnable updateLabels() {
+            private Runnable createUpdateLabelsAction() {
                 return new Runnable() {
 
                     private int limitInKmH = 0;
@@ -153,15 +153,47 @@ public class SpeedLimitsFragment extends Fragment {
                                         limitText.setText(Integer.toString(limitInKmH));
                                         Log.d(TAG, "limit=" + limitText);
 
-                                        JSONObject address = jsonLink.getJSONObject("Address");
-                                        if (address != null) {
-                                            detailText.setText(address.toString());
-                                        } else {
-                                            detailText.setText(NO_CONTENT);
-                                        }
+                                        setDetailLabel(jsonLink);
                                     }
                                 }
                             }
+                        }
+                    }
+
+                    private void setDetailLabel(JSONObject jsonLink) throws JSONException {
+                        //Label, City (county, state, country)
+                        JSONObject address = jsonLink.getJSONObject("Address");
+                        if (address != null) {
+
+                            StringBuilder stringBuilder = new StringBuilder();
+                            String label = address.getString("Label");
+
+                            if (label != null) {
+                                stringBuilder.append(label);
+                            }
+                            String city = address.getString("City");
+                            if (city != null) {
+                                stringBuilder.append(", ").append(city);
+                            }
+
+                            String county = address.getString("County");
+                            if (county != null) {
+                                stringBuilder.append(" (").append(county);
+                            }
+                            String state = address.getString("State");
+                            if (state != null) {
+                                stringBuilder.append(", ").append(state);
+                            }
+
+                            String country = address.getString("Country");
+                            if (country != null) {
+                                stringBuilder.append(", ").append(country).append(")");
+                            }
+                            if(!stringBuilder.toString().isEmpty()){
+                                detailText.setText(stringBuilder.toString());
+                            }
+                        } else {
+                            detailText.setText(NO_CONTENT);
                         }
                     }
 
