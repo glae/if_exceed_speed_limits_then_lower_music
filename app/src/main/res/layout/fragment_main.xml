@@ -14,7 +14,7 @@
         android:layout_alignParentEnd="true"
         android:textColor="@color/warningTextColor"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_toEndOf="@+id/warningImageView" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -48,7 +48,7 @@
         android:id="@+id/speedLimitText"
         android:layout_alignTop="@+id/vehiculeText"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/labelColor" />
+        android:textColor="@color/limitColor" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -91,8 +91,35 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/detailView"
-        android:layout_below="@+id/speed"
+        android:textColor="@color/labelColor"
+        android:layout_below="@+id/limit"
+        android:layout_marginTop="22dp"
+        android:layout_alignEnd="@+id/musicText"
+        android:layout_toEndOf="@+id/locationView"
+        android:elegantTextHeight="false"
+        android:textAlignment="center" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/warningImageView"
+        android:src="@android:drawable/ic_dialog_alert"
+        android:scaleType="fitCenter"
+        android:layout_marginRight="13dp"
+        android:contentDescription="warningIcon"
+        android:layout_above="@+id/vehiculeText"
+        android:layout_alignParentTop="true"
+        android:tint="@color/warningTextColor" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/locationView"
+        android:tint="@color/labelColor"
+        android:src="@android:drawable/ic_menu_mylocation"
         android:layout_alignParentStart="true"
-        android:layout_toStartOf="@+id/volume" />
+        android:layout_marginRight="13dp"
+        android:layout_alignBottom="@+id/detailView"
+        android:scaleType="fitCenter" />
 
 </RelativeLayout>
