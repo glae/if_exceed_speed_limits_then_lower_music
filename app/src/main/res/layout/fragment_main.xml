@@ -126,4 +126,30 @@
         android:layout_alignTop="@+id/detailView"
         android:baselineAlignBottom="false" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="km/h"
+        android:id="@+id/limitUnit"
+        android:textColor="@color/limitColor"
+        android:layout_alignBaseline="@+id/limit"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentRight="false"
+        android:layout_alignWithParentIfMissing="false"
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="130dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="km/h"
+        android:id="@+id/speedUnit"
+        android:layout_alignBaseline="@+id/speed"
+        android:textColor="@color/labelColor"
+        android:paddingLeft="95dp" />
+
 </RelativeLayout>
