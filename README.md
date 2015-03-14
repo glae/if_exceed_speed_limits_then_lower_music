@@ -8,7 +8,8 @@ Application, site or plugin aiming to encourage a driver to respect speed limits
 
 - [Mappy GPS free](https://play.google.com/store/apps/details?id=com.mappy.androidpagesjaunes&hl=fr_FR) (beep alarm when over speed limit)
 - http://www.apivir.org/index.html
-- related, HUD in car: https://www.youtube.com/watch?v=rzda7CQ-ZAU 
+- related, HUD in car: https://www.youtube.com/watch?v=rzda7CQ-ZAU
+- Play store: https://play.google.com/store/search?q=speed%20limit&c=apps
 
 ## Usable APIs
 
