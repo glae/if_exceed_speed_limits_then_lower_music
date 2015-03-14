@@ -11,43 +11,32 @@ public class VolumeUpdaterTest {
     VolumeUpdater updater = new VolumeUpdater();
 
     @Test
-    public void when_I_drive_between_0_and_70_kmph_I_want_the_volume_to_be_7() {
+    public void when_I_drive_between_0_and_30_kmph_I_want_the_volume_to_be_7() {
         int currentSpeed = 0;
         int nextVolume = updater.evaluateNextVolume(currentSpeed, ANY_LIMIT);
         assertThat(nextVolume).isEqualTo(7);
 
-        currentSpeed = 71;
+        currentSpeed = 31;
         nextVolume = updater.evaluateNextVolume(currentSpeed, ANY_LIMIT);
         assertThat(nextVolume).isNotEqualTo(7);
     }
 
     @Test
-    public void when_I_drive_between_71_and_90_kmph_I_want_the_volume_to_be_8() {
-        int currentSpeed = 71;
+    public void when_I_drive_between_31_and_105_kmph_I_want_the_volume_to_be_8() {
+        int currentSpeed = 31;
         int nextVolume = updater.evaluateNextVolume(currentSpeed, ANY_LIMIT);
         assertThat(nextVolume).isEqualTo(8);
 
-        currentSpeed = 91;
+        currentSpeed = 106;
         nextVolume = updater.evaluateNextVolume(currentSpeed, ANY_LIMIT);
         assertThat(nextVolume).isNotEqualTo(8);
     }
 
     @Test
-    public void when_I_drive_between_91_and_110_kmph_I_want_the_volume_to_be_9() {
-        int currentSpeed = 91;
+    public void when_I_drive_between_106_and_plus_I_want_the_volume_to_be_9() {
+        int currentSpeed = 106;
         int nextVolume = updater.evaluateNextVolume(currentSpeed, ANY_LIMIT);
         assertThat(nextVolume).isEqualTo(9);
-
-        currentSpeed = 111;
-        nextVolume = updater.evaluateNextVolume(currentSpeed, ANY_LIMIT);
-        assertThat(nextVolume).isNotEqualTo(9);
-    }
-
-    @Test
-    public void when_I_drive_between_111_and_plus_I_want_the_volume_to_be_10() {
-        int currentSpeed = 111;
-        int nextVolume = updater.evaluateNextVolume(currentSpeed, ANY_LIMIT);
-        assertThat(nextVolume).isEqualTo(10);
     }
 
 
@@ -58,7 +47,7 @@ public class VolumeUpdaterTest {
         int currentLimit = 50;
 
         int nextVolume = updater.evaluateNextVolume(currentSpeed, currentLimit);
-        assertThat(nextVolume).isEqualTo(6);
+        assertThat(nextVolume).isEqualTo(7);
     }
 
     @Test
@@ -68,7 +57,7 @@ public class VolumeUpdaterTest {
         int currentLimit = 50;
 
         int nextVolume = updater.evaluateNextVolume(currentSpeed, currentLimit);
-        assertThat(nextVolume).isEqualTo(5);
+        assertThat(nextVolume).isEqualTo(6);
     }
 
     @Test
@@ -78,7 +67,7 @@ public class VolumeUpdaterTest {
         int currentLimit = 50;
 
         int nextVolume = updater.evaluateNextVolume(currentSpeed, currentLimit);
-        assertThat(nextVolume).isEqualTo(4);
+        assertThat(nextVolume).isEqualTo(5);
     }
 
 
@@ -89,7 +78,7 @@ public class VolumeUpdaterTest {
         int currentLimit = 90;
 
         int nextVolume = updater.evaluateNextVolume(currentSpeed, currentLimit);
-        assertThat(nextVolume).isEqualTo(7);
+        assertThat(nextVolume).isEqualTo(6);
     }
 
 }

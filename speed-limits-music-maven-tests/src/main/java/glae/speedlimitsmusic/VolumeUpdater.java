@@ -13,14 +13,12 @@ public class VolumeUpdater {
     }
 
     private int adjustVolumeAccordingToVehicleSpeed(int currentSpeed, int nextVolume) {
-        if (currentSpeed <= 70) {
+        if (currentSpeed <= 30) {
             nextVolume += 7;
-        } else if (currentSpeed <= 90) {
+        } else if (currentSpeed <= 105) {
             nextVolume += 8;
-        } else if (currentSpeed <= 110) {
-            nextVolume += 9;
         } else {
-            nextVolume += 10;
+            nextVolume += 9;
         }
         return nextVolume;
     }
