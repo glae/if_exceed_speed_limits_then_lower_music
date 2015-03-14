@@ -5,7 +5,7 @@ import android.location.LocationListener;
 import android.os.Bundle;
 import android.util.Log;
 
-import static glae.speedlimitsmusic.PlaceholderFragment.TAG;
+import static glae.speedlimitsmusic.SpeedLimitsFragment.TAG;
 
 public class SpeedLimitsLocationListener implements LocationListener {
 
