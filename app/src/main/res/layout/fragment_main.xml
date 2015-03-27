@@ -48,7 +48,7 @@
         android:id="@+id/speedLimitText"
         android:layout_alignTop="@+id/vehiculeText"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/limitColor" />
+        android:textColor="#ff000000" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -61,7 +61,7 @@
         android:layout_below="@+id/speedLimitText"
         android:layout_centerHorizontal="true"
         android:textAlignment="textEnd"
-        android:textColor="@color/limitColor" />
+        android:textColor="@color/speedAndVolumeColor" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -84,7 +84,7 @@
         android:layout_below="@+id/musicText"
         android:layout_alignParentEnd="true"
         android:textAlignment="textEnd"
-        android:textColor="@color/speedAndVolumeColor" />
+        android:textColor="#000000" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -132,7 +132,6 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="km/h"
         android:id="@+id/limitUnit"
-        android:textColor="@color/limitColor"
         android:layout_alignBaseline="@+id/limit"
         android:layout_alignParentBottom="false"
         android:layout_alignParentLeft="false"
@@ -140,7 +139,8 @@
         android:layout_alignParentRight="false"
         android:layout_alignWithParentIfMissing="false"
         android:layout_centerHorizontal="true"
-        android:paddingLeft="130dp" />
+        android:paddingLeft="130dp"
+        android:textColor="@color/limitColor" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -149,7 +149,7 @@
         android:text="km/h"
         android:id="@+id/speedUnit"
         android:layout_alignBaseline="@+id/speed"
-        android:textColor="@color/labelColor"
+        android:textColor="@color/limitColor"
         android:paddingLeft="95dp" />
 
 </RelativeLayout>
