@@ -10,3 +10,5 @@ The application requires at least Android Kitkat (4.4, API 19).
 
 **Warning**: the app is very volume-related intrusive (foreground and background), you'll need to kill it to restore normal music volume use.
 
+
+![Screenshot](https://github.com/glae/exceed_speed_limits_then_lower_music/blob/master/screenshot.png)
