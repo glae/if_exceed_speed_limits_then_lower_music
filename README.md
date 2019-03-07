@@ -1,4 +1,4 @@
-# Excess speed limits = lower music volume
+# If exceed speed limits then lower music volume
 ## Goal
 This is an Android prototype application aiming to encourage a driver to respect speed limits, by reducing music volume when exceeding speed limit. It uses GPS and data connection.
 
